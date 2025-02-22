@@ -11,7 +11,7 @@ export default function NavBar() {
     <div className="top-0 flex w-full bg-blue-700 h-14 items-center">
       <div className="mr-auto flex ml-6">
         <Link
-          to="/"
+          to="/landing"
           className="text-gray-200 mx-1 p-1 text-2xl font-bold hover:text-gray-400 "
         >
           Logo
