@@ -1,4 +1,4 @@
-import JobCard from "../shared-component/job-card";
+import JobCard from "../shared-components/job-card";
 
 
 export default function Home() {
