@@ -4,10 +4,9 @@ import User from "../schemas/user-schema.js";
 
 const router = express.Router();
 
-router.get("/user/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const user_id = req.params.id;
-    console.log("Received ID:", user_id);
 
     // Validate MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(user_id)) {
