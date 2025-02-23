@@ -9,7 +9,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "echo \"No build step required for plain JavaScript Express app\"",
+    "build": "echo No build step required",
     "start": "node server.js"
   }
 }
