@@ -15,37 +15,40 @@ const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 1024 },
       items: 3,
+      partialVisibilityGutter: 20
     },
     desktop: {
       breakpoint: { max: 1024, min: 768 },
       items: 2,
+      partialVisibilityGutter: 15
     },
     tablet: {
       breakpoint: { max: 768, min: 464 },
       items: 1,
+      partialVisibilityGutter: 10
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
       items: 1,
+      partialVisibilityGutter: 5
     },
   };
 
 const JobCarousel = ({ title }) => {
     return (
-      <div className="my-6">
+      <div className="my-6 max-w-6xl mx-auto">
         <h2 className="text-lg font-semibold text-center mb-4">{title}</h2>
-        <Carousel
+        <Carousel className="py-4"
           responsive={responsive}
           infinite={true}
           autoPlay={false}
           keyBoardControl={true}
-          showDots={true}
+          showDots={false}
           removeArrowOnDeviceType={["tablet", "mobile"]}
+          itemClass="px-2 flex justify-center w-[90%]"
         >
           {jobs.map((job) => (
-            <div key={job.id} className="p-4 bg-gray-200 rounded-lg shadow-md text-center">
-              <h3 className="text-gray-700">{job.title}</h3>
-            </div>
+            <JobCard key={job.id} title={job.title} description="Job Description" />
           ))}
         </Carousel>
       </div>
