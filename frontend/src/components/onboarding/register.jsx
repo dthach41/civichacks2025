@@ -19,8 +19,7 @@ export default function Login() {
             }
             const response = await register(name, email, password);
             console.log(response);
-            localStorage.setItem('userId', response.user._id);
-            navigate("/home")
+            navigate("/login")
             
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
