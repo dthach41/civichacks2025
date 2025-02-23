@@ -1,5 +1,5 @@
 import React from 'react';
-import react_img from './react.svg';
+import react_img from '../../assets/react.svg';
 
 export default function JobCard({title, description}) {
     return (
