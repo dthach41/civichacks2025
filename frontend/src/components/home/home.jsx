@@ -38,8 +38,7 @@ const JobCarousel = () => {
     return (
       <>
         <div className="my-6 max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6 px-4">Jobs</h1>
-          <h2 className="text-lg font-semibold text-center mb-4">Recommended Jobs</h2>
+          <h1 className="text-2xl font-semibold text-center mb-4">Recommended Jobs</h1>
           <Carousel
             className="py-4"
             responsive={responsive}
@@ -61,7 +60,7 @@ const JobCarousel = () => {
           <hr className="h-0.5 my-8 bg-gray-200 border-0 dark:bg-gray-500"></hr>
         </div>
         <div className="my-6 max-w-6xl mx-auto">
-          <h2 className="text-lg font-semibold text-center mb-4">Your Jobs</h2>
+          <h2 className="text-2xl font-semibold text-center mb-4">Your Jobs</h2>
           <Carousel
             className="py-4"
             responsive={responsive}
