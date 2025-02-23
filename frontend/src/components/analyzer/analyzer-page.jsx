@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../shared-components/button.jsx';
 import { analyzeJobSkills } from '../../api/groq';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function AnalyzerPage() {
   const [jobDescription, setJobDescription] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = async () => {
-    if (!jobDescription.trim()) return;
+  useEffect(() => {
+    // Check if we received a job description and autoAnalyze flag
+    if (location.state?.jobDescription && location.state?.autoAnalyze) {
+      setJobDescription(location.state.jobDescription);
+      handleSubmit(location.state.jobDescription);
+    }
+  }, [location.state]);
+
+  const handleSubmit = async (description = jobDescription) => {
+    if (!description.trim()) return;
     try {
-      const skills = await analyzeJobSkills(jobDescription);
+      const skills = await analyzeJobSkills(description);
       navigate('/analyzer/skills-resources', { state: { skills } });
     } catch (error) {
       console.error('Error analyzing job skills:', error);
@@ -42,7 +51,7 @@ export default function AnalyzerPage() {
       <div className="mt-6 space-x-4 flex justify-center items-center mb-12">
         <Button 
           text="Analyze"
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
           className="bg-blue-600 hover:bg-blue-700 px-6 py-2.5 text-lg"
         />
         <Button 

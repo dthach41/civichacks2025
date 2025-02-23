@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 export default function Jobs() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [jobs, setJobs] = useState([]);
+    const [selectedJob, setSelectedJob] = useState(null);
     
     // Update initial filters state
     const [filters, setFilters] = useState({
@@ -15,9 +18,8 @@ export default function Jobs() {
         selectedLocations: ['US'],    // only store selected locations
         technologies: [],
         postedDays: 15,
+        jobTitles: [],
     });
-
-    const [showTooltip, setShowTooltip] = useState(false);
 
     const seniorityOptions = [
         { value: 'c_level', label: 'C-Level' },
@@ -44,15 +46,14 @@ export default function Jobs() {
         { value: 90, label: 'Last 90 days' }
     ];
 
+    const navigate = useNavigate();
+
     const handleFilterChange = (filterName, value) => {
         setFilters(prev => ({
             ...prev,
             [filterName]: value
         }));
     };
-
-    const handleSliderMouseDown = () => setShowTooltip(true);
-    const handleSliderMouseUp = () => setShowTooltip(false);
 
     const fetchJobs = async () => {
         console.log('fetchJobs function called');
@@ -87,6 +88,7 @@ export default function Jobs() {
                     min_salary_usd: filters.minSalary,
                     max_salary_usd: filters.maxSalary,
                     job_technology_slug_or: filters.technologies,
+                    job_title_or: filters.jobTitles,
                     include_total_results: false,
                     blur_company_data: false
                 }
@@ -120,11 +122,193 @@ export default function Jobs() {
         fetchJobs();
     }, [filters]); // Re-fetch when filters change
 
+    const handleAnalyze = (description) => {
+        navigate('/analyzer', { 
+            state: { 
+                jobDescription: description,
+                autoAnalyze: true  // Flag to indicate this came from jobs page
+            }
+        });
+    };
+
+    const JobModal = ({ job, onClose, onAnalyze }) => {
+        const companyName = job?.company || 'No Company';
+        
+        // Convert HTML to Markdown-friendly format
+        const cleanDescription = job?.description?.replace(/<br\s*\/?>/g, '\n')
+            .replace(/<\/p>/g, '\n\n')
+            .replace(/<[^>]*>/g, '')
+            .replace(/&nbsp;/g, ' ')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .trim();
+        
+        return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div className="bg-white rounded-lg w-full max-w-6xl h-[90vh] relative p-8 flex flex-col">
+                    {/* Close button */}
+                    <button 
+                        onClick={onClose}
+                        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+                    >
+                        ×
+                    </button>
+
+                    {/* Header section */}
+                    <div className="flex items-start gap-6 mb-6">
+                        {job.company_object?.logo?.startsWith('http') ? (
+                            <img 
+                                src={job.company_object.logo} 
+                                alt={`${companyName} logo`}
+                                className="w-24 h-24 object-contain rounded bg-gray-50"
+                            />
+                        ) : (
+                            <div className="w-24 h-24 rounded bg-gray-100 flex items-center justify-center">
+                                <span className="text-3xl font-semibold text-gray-500">
+                                    {companyName.charAt(0).toUpperCase()}
+                                </span>
+                            </div>
+                        )}
+                        <div>
+                            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                                {job?.job_title || 'No Title'}
+                            </h2>
+                            <div className="text-xl text-gray-600">
+                                {companyName}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Description - Now with Markdown */}
+                    <div className="flex-1 overflow-y-auto mb-6 pr-2">
+                        <div className="prose max-w-none">
+                            {cleanDescription ? (
+                                <ReactMarkdown>{cleanDescription}</ReactMarkdown>
+                            ) : (
+                                <p className="italic">No description available</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Footer actions */}
+                    <div className="flex justify-end gap-4 pt-4 border-t">
+                        <button 
+                            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            onClick={() => onAnalyze(cleanDescription)}
+                        >
+                            Analyze Skills
+                        </button>
+                        {job?.url && (
+                            <button 
+                                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                onClick={() => window.open(job.url, '_blank')}
+                            >
+                                Apply Now
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    // Update the job cards to use markdown for previews
+    const JobCard = ({ job, onClick }) => {
+        const companyName = job?.company || 'No Company';
+        const cleanDescription = job?.description?.replace(/<br\s*\/?>/g, '\n')
+            .replace(/<\/p>/g, '\n\n')
+            .replace(/<[^>]*>/g, '')
+            .replace(/&nbsp;/g, ' ')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .trim();
+
+        return (
+            <div 
+                className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow space-y-4 cursor-pointer"
+                onClick={onClick}
+            >
+                <div className="flex items-start gap-4">
+                    {job.company_object?.logo?.startsWith('http') && (
+                        <div className="w-16 h-16 relative">
+                            <img 
+                                src={job.company_object.logo} 
+                                alt={`${companyName} logo`}
+                                className="w-16 h-16 object-contain rounded bg-gray-50"
+                                onError={(e) => {
+                                    e.target.parentElement.innerHTML = `
+                                        <div class="w-16 h-16 rounded bg-gray-100 flex items-center justify-center">
+                                            <span class="text-2xl font-semibold text-gray-500">
+                                                ${companyName.charAt(0).toUpperCase()}
+                                            </span>
+                                        </div>
+                                    `;
+                                }}
+                            />
+                        </div>
+                    )}
+                    <div className="flex-1">
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            {job?.job_title || 'No Title'}
+                        </h2>
+                        <div className="text-gray-600 text-lg">
+                            {companyName}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="prose prose-sm max-w-none text-gray-600">
+                    {cleanDescription ? (
+                        <div className="line-clamp-3">
+                            <ReactMarkdown>{cleanDescription}</ReactMarkdown>
+                        </div>
+                    ) : (
+                        <p className="italic">No description available</p>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="flex">
             <div className="w-64 p-4 border-r">
                 {/* Filters sidebar */}
                 <div className="space-y-6">
+                    <div>
+                        <h3 className="font-semibold mb-2">Search Job Titles</h3>
+                        <input
+                            type="text"
+                            placeholder="e.g. Senior Developer"
+                            className="w-full p-2 border rounded"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && e.target.value.trim()) {
+                                    handleFilterChange('jobTitles', [...filters.jobTitles, e.target.value.trim()]);
+                                    e.target.value = '';
+                                }
+                            }}
+                        />
+                        {filters.jobTitles.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                                {filters.jobTitles.map((title, index) => (
+                                    <div key={index} className="flex items-center gap-2 bg-gray-100 p-1 rounded">
+                                        <span className="text-sm">{title}</span>
+                                        <button
+                                            onClick={() => handleFilterChange('jobTitles', 
+                                                filters.jobTitles.filter((_, i) => i !== index)
+                                            )}
+                                            className="text-red-500 hover:text-red-700"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
                     <div>
                         <h3 className="font-semibold mb-2">Remote Work</h3>
                         <label className="flex items-center">
@@ -164,7 +348,7 @@ export default function Jobs() {
 
                     <div>
                         <h3 className="font-semibold mb-2">Salary Range</h3>
-                        <div className="space-y-2 relative">
+                        <div className="space-y-2">
                             <input
                                 type="range"
                                 min="0"
@@ -172,22 +356,8 @@ export default function Jobs() {
                                 step="10000"
                                 value={filters.minSalary}
                                 onChange={(e) => handleFilterChange('minSalary', parseInt(e.target.value))}
-                                onMouseDown={handleSliderMouseDown}
-                                onMouseUp={handleSliderMouseUp}
-                                onTouchStart={handleSliderMouseDown}
-                                onTouchEnd={handleSliderMouseUp}
                                 className="w-full"
                             />
-                            {showTooltip && (
-                                <div 
-                                    className="absolute -top-8 left-0 bg-black text-white px-2 py-1 rounded text-sm transform -translate-x-1/2"
-                                    style={{ 
-                                        left: `${(filters.minSalary / 300000) * 100}%`,
-                                    }}
-                                >
-                                    ${filters.minSalary.toLocaleString()}
-                                </div>
-                            )}
                             <div className="text-sm text-gray-600">
                                 ${filters.minSalary.toLocaleString()} - ${filters.maxSalary.toLocaleString()}
                             </div>
@@ -253,71 +423,26 @@ export default function Jobs() {
                 )}
                 
                 <div className="overflow-y-auto h-[calc(100vh-12rem)] space-y-4">
-                    {jobs.map((job, index) => {
-                        const companyName = job?.company || 'No Company';
-                        return (
-                            <div 
-                                key={job?.id || index} 
-                                className="bg-white border rounded-lg p-6 hover:shadow-lg transition-shadow space-y-4"
-                            >
-                                <div className="flex items-start gap-4">
-                                    {job.company_object?.logo?.startsWith('http') && (
-                                        <div className="w-16 h-16 relative">
-                                            <img 
-                                                src={job.company_object.logo} 
-                                                alt={`${companyName} logo`}
-                                                className="w-16 h-16 object-contain rounded bg-gray-50"
-                                                onError={(e) => {
-                                                    e.target.parentElement.innerHTML = `
-                                                        <div class="w-16 h-16 rounded bg-gray-100 flex items-center justify-center">
-                                                            <span class="text-2xl font-semibold text-gray-500">
-                                                                ${companyName.charAt(0).toUpperCase()}
-                                                            </span>
-                                                        </div>
-                                                    `;
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-                                    <div className="flex-1">
-                                        <h2 className="text-xl font-semibold text-gray-900">
-                                            {job?.job_title || 'No Title'}
-                                        </h2>
-                                        <div className="text-gray-600 text-lg">
-                                            {companyName}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="prose prose-sm max-w-none text-gray-600">
-                                    {job?.description ? (
-                                        <div 
-                                            className="line-clamp-3"
-                                            dangerouslySetInnerHTML={{ __html: job.description }}
-                                        />
-                                    ) : (
-                                        <p className="italic">No description available</p>
-                                    )}
-                                </div>
-
-                                {job?.url && (
-                                    <div className="flex justify-end pt-4 border-t">
-                                        <button 
-                                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                            onClick={() => window.open(job.url, '_blank')}
-                                        >
-                                            Apply Now
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
+                    {jobs.map((job, index) => (
+                        <JobCard
+                            key={job?.id || index}
+                            job={job}
+                            onClick={() => setSelectedJob(job)}
+                        />
+                    ))}
 
                     {(!jobs || jobs.length === 0) && !loading && !error && (
                         <div className="text-center text-gray-500 mt-8">
                             No jobs found
                         </div>
+                    )}
+
+                    {selectedJob && (
+                        <JobModal 
+                            job={selectedJob} 
+                            onClose={() => setSelectedJob(null)}
+                            onAnalyze={handleAnalyze}
+                        />
                     )}
                 </div>
             </div>
