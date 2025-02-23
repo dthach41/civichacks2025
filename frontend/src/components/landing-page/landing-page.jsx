@@ -16,7 +16,7 @@ export default function LandingPage() {
                     style={{ textShadow: "1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black" }}>
                     Welcome to our application. Get started by clicking the button below.
                 </p>
-                    <Button text="Get Started" onClick={() => navigate('/login')} />
+                    <Button text="Get Started" onClick={() => navigate('/register')} />
             </div>
         </div>
         </>
