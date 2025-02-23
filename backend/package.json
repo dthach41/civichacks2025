@@ -7,5 +7,9 @@
     "mongodb": "^6.13.1",
     "mongoose": "^8.10.1"
   },
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build": "echo \"No build step required for plain JavaScript Express app\"",
+    "start": "node server.js"
+  }
 }
