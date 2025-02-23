@@ -1,6 +1,8 @@
 import Button from "../shared-components/button";
+import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
+    const navigate = useNavigate();
     return(
         <>
         <div className="flex flex-col items-center h-screen bg-gray-100 bg-cover bg-center" 
@@ -14,7 +16,7 @@ export default function LandingPage() {
                     style={{ textShadow: "1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black" }}>
                     Welcome to our application. Get started by clicking the button below.
                 </p>
-                <Button text="Get Started" onClick={() => {console.log('Get Started clicked')}}/>
+                    <Button text="Get Started" onClick={() => navigate('/login')} />
             </div>
         </div>
         </>
