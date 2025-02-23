@@ -86,17 +86,3 @@ const JobCarousel = () => {
   };
   
   export default JobCarousel;
-
-// export default function Home() {
-//     return(
-//         <>
-//         <h1 className="text-green-500">Recommended Jobs</h1>
-//         <JobCard title="test job" description="job description"/>
-
-//         <hr className="h-1 my-8 bg-gray-200 border-0 dark:bg-gray-500"></hr>
-//         <h1 className="text-green-500">Recommended Jobs</h1>
-//         </>
-//     )
-// }
-
-
