@@ -5,7 +5,7 @@ export default function Home() {
     return(
         <>
         <h1 className="text-green-500">Home</h1>
-        <JobCard />
+        <JobCard title="test job" description="job description"/>
         </>
     )
 }
