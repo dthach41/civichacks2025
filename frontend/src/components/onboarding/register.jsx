@@ -1,5 +1,5 @@
 import Button from '../shared-components/button';
-import { login } from '../../api/auth-api';
+import { register, login } from '../../api/auth-api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,8 +39,9 @@ export default function Login() {
                             <label className="block text-left w-full">Password: </label>
                             <input type="password" placeholder="Password" className="w-full border border-black px-2 py-1 rounded-md" onChange={(e) => setPassword(e.target.value)}/>
                         </div>
-                        <div className="flex justify-center">
-                            <Button text="Login" onClick={() => {handleLogin()}} className="w-full"/>
+                        <div className="flex justify-center gap-4">
+                            <Button text="Login" onClick={() => {handleLogin()}} className="flex-1"/>
+                            <Button text="Register" onClick={() => {console.log('Register clicked')}} className="flex-1"/>
                         </div>
                     </div>
                 </div>
