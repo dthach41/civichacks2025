@@ -6,6 +6,7 @@ import LandingPage from "./components/landing-page/landing-page";
 import AnalyzerPage from "./components/analyzer/analyzer-page";
 import Jobs from "./components/jobs/jobs";
 import ProfilePage from "./components/profile-page/profile-page";
+import LoginPage from "./components/onboarding/login";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
       <Route path="/analyzer" element={<AnalyzerPage/>}/> 
       <Route path="/jobs" element={<Jobs/>}/>
       <Route path="/profile" element={<ProfilePage/>}/>
+      <Route path="/login" element={<LoginPage/>}/>
     </Routes>
     </BrowserRouter>
     </>
