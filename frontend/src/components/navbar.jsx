@@ -11,17 +11,17 @@ export default function NavBar() {
     <div className="top-0 flex w-full bg-blue-700 h-14 items-center">
       <div className="mr-auto flex ml-6">
         <Link
-          to="/landing"
+          to="/"
           className="text-gray-200 mx-1 p-1 text-2xl font-bold hover:text-gray-400 "
         >
-          Logo
+          Jobora
         </Link>
       </div>
       <div className="ml-auto flex space-x-6 mr-6">
         <Link
-          to="/"
+          to="/home"
           className={`text-gray-200 mx-1 p-1 hover:text-gray-400 cursor-pointer ${
-            isActive("/") ? "active-link" : ""
+            isActive("/home") ? "active-link" : ""
           }`}
         >
           Home
@@ -53,6 +53,16 @@ export default function NavBar() {
         >
           Profile
         </Link>
+
+        <Link
+          to="/login"
+          className={`text-gray-200 mx-1 p-1 hover:text-gray-400 cursor-pointer ${
+            isActive("/login") ? "active-link" : ""
+          }`}
+        >
+          Login
+        </Link>
+        
       </div>
     </div>
   );
