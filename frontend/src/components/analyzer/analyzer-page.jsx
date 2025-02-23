@@ -22,29 +22,34 @@ export default function AnalyzerPage() {
   };
 
   return (
-    <div>
-      <div className="flex justify-center items-center mt-16">
-          <h1 className="text-3xl font-bold my-4">Skill Analyzer</h1>
+    <div className="container mx-auto px-4 max-w-4xl">
+      <div className="text-center mt-16 space-y-4">
+        <h1 className="text-4xl font-bold text-gray-800">Skill Analyzer</h1>
+        <p className="text-gray-600 text-lg">
+          Paste a job description below to analyze required skills and find learning resources
+        </p>
       </div>
-      <div className="flex flex-col items-center mt-4">
-          <textarea 
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Enter job description" 
-            className="w-3/4 h-[28rem] p-3 border-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:border-blue-500 resize-none"
-          />
+      
+      <div className="mt-8">
+        <textarea 
+          value={jobDescription}
+          onChange={(e) => setJobDescription(e.target.value)}
+          placeholder="Paste your job description here..." 
+          className="w-full h-[28rem] p-4 border-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:border-blue-500 resize-none bg-white"
+        />
       </div>
-      <div className="mt-4 space-x-4 flex justify-center items-center mb-8">
-            <Button 
-              text="Submit"
-              onClick={handleSubmit}
-              className="bg-blue-500 hover:bg-blue-600"
-            />
-            <Button 
-              text="Clear"
-              onClick={handleClear}
-              className="bg-gray-300 hover:bg-gray-400 !text-gray-700"
-            />
+
+      <div className="mt-6 space-x-4 flex justify-center items-center mb-12">
+        <Button 
+          text="Analyze"
+          onClick={handleSubmit}
+          className="bg-blue-600 hover:bg-blue-700 px-6 py-2.5 text-lg"
+        />
+        <Button 
+          text="Clear"
+          onClick={handleClear}
+          className="bg-gray-200 hover:bg-gray-300 !text-gray-700 px-6 py-2.5 text-lg"
+        />
       </div>
     </div>
   );
