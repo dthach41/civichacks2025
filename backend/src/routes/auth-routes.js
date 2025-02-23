@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Register User
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, job_seeking } = req.body;
 
   try {
     const userExists = await User.findOne({ email });
@@ -13,13 +13,14 @@ router.post("/register", async (req, res) => {
     if (userExists)
       return res.status(400).json({ message: "User already exists" });
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, job_seeking });
 
     if (user) {
       res.status(201).json({
         _id: user.id,
         name: user.name,
         email: user.email,
+        job_seeking: user.job_seeking,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
