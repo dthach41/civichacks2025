@@ -8,7 +8,7 @@ export default function LandingPage() {
             <div className="text-center mt-16"> {/* Ensures text and button are centered */}
                 <h1 className="text-4xl font-bold text-white mb-4" 
                     style={{ textShadow: "1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black" }}>
-                    App Name
+                    Jobora
                 </h1>
                 <p className="text-lg text-white mb-8" 
                     style={{ textShadow: "1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black" }}>
