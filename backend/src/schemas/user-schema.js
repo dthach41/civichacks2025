@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    job_seeking: { type: String, required: true },
+    jobSeeking: { type: String, required: true },
     saved_jobs: { type: [JobSchema] },
     skills: { type: [String] },
   },

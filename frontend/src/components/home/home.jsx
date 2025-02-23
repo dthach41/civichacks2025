@@ -3,6 +3,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import JobCard from "../shared-components/job-card";
 import axios from 'axios';
+import { getUserById } from "../../api/auth-api";
 
 const JobCarousel = () => {
     
@@ -27,6 +28,32 @@ const JobCarousel = () => {
       postedDays: 15,
       jobTitles: [],
   });
+
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      console.log(userId);
+      if (!userId) return setLoading(false); // Stop loading if no userId
+
+      const user = await getUserById(userId);
+      console.log(user.jobSeeking);
+
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        jobTitles: [user.jobSeeking.toLowerCase()], // Update filters before rendering
+      }));
+
+      setLoading(false); // Mark as loaded after filters are set
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      setLoading(false);
+    }
+  };
+
+  fetchUser();
+}, []);
+
 
     const fetchJobs = async () => {
       console.log('fetchJobs function called');
@@ -87,7 +114,7 @@ const JobCarousel = () => {
 
   useEffect(() => {
       fetchJobs();
-  }, []); // Re-fetch when filters change
+  }, [filters]); // Re-fetch when filters change
 
     // Save favorites to localStorage whenever they change
     useEffect(() => {
@@ -129,8 +156,13 @@ const JobCarousel = () => {
           partialVisibilityGutter: 10
         },
     };
-
-    return (
+    
+    if (loading ) {
+        return(
+            <>Loading</>
+        )
+    } else {
+            return (
       <>
         <div className="my-6 max-w-6xl mx-auto">
           <h1 className="text-2xl font-semibold text-center mb-4">Recommended Jobs</h1>
@@ -193,6 +225,9 @@ const JobCarousel = () => {
         </div>
       </>
     );
+    }
+
+
 };
 
 export default JobCarousel;

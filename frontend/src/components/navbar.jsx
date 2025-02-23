@@ -6,12 +6,14 @@ export default function NavBar() {
 
   // Helper function to determine if the link is active
   const isActive = (path) => location.pathname === path;
+  const userId = localStorage.getItem("userId"); // Check if user is logged in
+  const isAuthenticated = !!userId; // Convert to boolean
 
   return (
     <div className="top-0 flex w-full bg-blue-700 h-14 items-center">
       <div className="mr-auto flex ml-6">
         <Link
-          to="/"
+          to="/home"
           className="text-gray-200 mx-1 p-1 text-2xl font-bold hover:text-gray-400 "
         >
           Jobora
@@ -51,17 +53,9 @@ export default function NavBar() {
             isActive("/profile") ? "active-link" : ""
           }`}
         >
-          Profile
+          {isAuthenticated ? "Profile" : "Login"}
         </Link>
 
-        <Link
-          to="/login"
-          className={`text-gray-200 mx-1 p-1 hover:text-gray-400 cursor-pointer ${
-            isActive("/login") ? "active-link" : ""
-          }`}
-        >
-          Login
-        </Link>
         
       </div>
     </div>

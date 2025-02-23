@@ -3,7 +3,7 @@ import { login } from '../../api/auth-api';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+export default function Login({ setIsAuthenticated }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -39,8 +39,9 @@ export default function Login() {
                             <label className="block text-left w-full">Password: </label>
                             <input type="password" placeholder="Password" className="w-full border border-black px-2 py-1 rounded-md" onChange={(e) => setPassword(e.target.value)}/>
                         </div>
-                        <div className="flex justify-center">
+                        <div className="flex flex-col space-y-4 justify-center">
                             <Button text="Login" onClick={() => {handleLogin()}} className="w-full"/>
+                            <Button text="Register" onClick={() => {navigate("/register")}} className="w-full"/>
                         </div>
                     </div>
                 </div>

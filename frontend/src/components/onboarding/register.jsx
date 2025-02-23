@@ -8,6 +8,7 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [jobSeeking, setJobSeeking] = useState('')
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ export default function Login() {
                 setError('Passwords do not match');
                 return;
             }
-            const response = await register(name, email, password);
+            const response = await register(name, email, password, jobSeeking);
             console.log(response);
             navigate("/login")
             
@@ -52,13 +53,21 @@ export default function Login() {
                             <label className="block text-left w-full">Password: </label>
                             <input type="password" placeholder="Password" className="w-full border border-black px-2 py-1 rounded-md" onChange={(e) => setPassword(e.target.value)}/>
                         </div>
-                        <div className="mb-6">
+                        <div className="mb-2">
                             <label className="block text-left w-full">Confirm Password: </label>
                             <input 
                                 type="password" 
                                 placeholder="Confirm Password" 
                                 className="w-full border border-black px-2 py-1 rounded-md" 
                                 onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-6">
+                            <label className="block text-left w-full">What Job / Role are you seeking? </label>
+                            <input 
+                                placeholder="Job / Role Seeking" 
+                                className="w-full border border-black px-2 py-1 rounded-md" 
+                                onChange={(e) => setJobSeeking(e.target.value)}
                             />
                         </div>
                         {error && <div className="text-red-500 mb-4">{error}</div>}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { getUserById } from '../../api/auth-api';
 
 export default function Jobs() {
     const [loading, setLoading] = useState(false);
@@ -47,6 +48,31 @@ export default function Jobs() {
     ];
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const userId = localStorage.getItem("userId");
+          console.log(userId);
+          if (!userId) return setLoading(false); // Stop loading if no userId
+    
+          const user = await getUserById(userId);
+          console.log(user.jobSeeking);
+    
+          setFilters((prevFilters) => ({
+            ...prevFilters,
+            jobTitles: [user.jobSeeking.toLowerCase()], // Update filters before rendering
+          }));
+    
+          setLoading(false); // Mark as loaded after filters are set
+        } catch (error) {
+          console.error("Error fetching user:", error);
+          setLoading(false);
+        }
+      };
+    
+      fetchUser();
+    }, []);
 
     const handleFilterChange = (filterName, value) => {
         setFilters(prev => ({

@@ -1,7 +1,10 @@
 import React from 'react';
 import ProfileCard from '../shared-components/profile-card';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
+    const navigate = useNavigate()
+
     const user = {
         profilePicture: 'profile-picture-url-here',
         fullName: 'John Doe',
@@ -13,6 +16,11 @@ export default function ProfilePage() {
         ]
     };
 
+    function onClickSignOut() {
+        localStorage.removeItem("userId")
+        navigate("/login")
+    }
+
     return (
         <div className="flex flex-col items-center max-w-2xl mx-auto p-4">
             <div className="flex items-center mb-4">
@@ -20,6 +28,7 @@ export default function ProfilePage() {
                 <div>
                     <h1 className="text-2xl font-bold">{user.fullName}</h1>
                     <p className="text-gray-600">{user.email}</p>
+                    <button className="text-red-500" onClick={onClickSignOut}>Sign Out</button>
                 </div>
             </div>
             <div>
