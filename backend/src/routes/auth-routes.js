@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    res.json({ message: "Login successful" });
+    res.json({ message: "Login successful", user: user });
   } else {
     res.status(401).json({ message: "Invalid credentials" });
   }

@@ -1,6 +1,29 @@
 import Button from '../shared-components/button';
+import { register, login } from '../../api/auth-api';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async () => {
+        try {
+            const response = await login(email, password);
+            console.log(response);
+            localStorage.setItem('userId', response.user._id);
+            console.log(localStorage.getItem('userId'));
+            navigate("/home")
+            
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || error.message || 'An error occurred';
+            setError(errorMessage);
+            console.error(errorMessage);
+        }
+    }
+    
     return (
         <div className="flex h-screen">
             {/* Left half - Login Form */}
@@ -9,15 +32,15 @@ export default function Login() {
                     <h1 className="text-2xl font-bold mb-4">Login</h1>
                     <div className="w-80">
                         <div className="mb-2">
-                            <label className="block text-left w-full">Username: </label>
-                            <input type="text" placeholder="Username" className="w-full border border-black px-2 py-1 rounded-md" />
+                            <label className="block text-left w-full">Email: </label>
+                            <input type="text" placeholder="Email" className="w-full border border-black px-2 py-1 rounded-md" onChange={(e) => setEmail(e.target.value)}/>
                         </div>
                         <div className="mb-6">
                             <label className="block text-left w-full">Password: </label>
-                            <input type="password" placeholder="Password" className="w-full border border-black px-2 py-1 rounded-md" />
+                            <input type="password" placeholder="Password" className="w-full border border-black px-2 py-1 rounded-md" onChange={(e) => setPassword(e.target.value)}/>
                         </div>
                         <div className="flex justify-center gap-4">
-                            <Button text="Login" onClick={() => {console.log('Login clicked')}} className="flex-1"/>
+                            <Button text="Login" onClick={() => {handleLogin()}} className="flex-1"/>
                             <Button text="Register" onClick={() => {console.log('Register clicked')}} className="flex-1"/>
                         </div>
                     </div>
