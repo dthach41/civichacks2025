@@ -1,4 +1,3 @@
-import SkillsResources from "../analyzer/skills-resources";
 import JobCard from "../shared-components/job-card";
 
 
