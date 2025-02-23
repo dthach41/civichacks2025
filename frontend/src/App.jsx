@@ -7,6 +7,7 @@ import AnalyzerPage from "./components/analyzer/analyzer-page";
 import Jobs from "./components/jobs/jobs";
 import ProfilePage from "./components/profile-page/profile-page";
 import LoginPage from "./components/onboarding/login";
+import RegisterPage from "./components/onboarding/register";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
       <Route path="/jobs" element={<Jobs/>}/>
       <Route path="/profile" element={<ProfilePage/>}/>
       <Route path="/login" element={<LoginPage/>}/>
+      <Route path="/register" element={<RegisterPage/>}/>
     </Routes>
     </BrowserRouter>
     </>
